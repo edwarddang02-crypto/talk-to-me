@@ -1,5 +1,6 @@
 import { PROFILES, QUOTES, SKILLS } from './data.mjs';
 export { applyCors, handlePreflight } from './cors.mjs';
+export { isAllowedOrigin, rateLimit, ALLOWED_ORIGINS } from './security.mjs';
 
 function baseProtocol(profile, opts) {
   const disclaimerRule = opts.disclaimerShown

@@ -1,4 +1,11 @@
-import { loadPersona, buildSystemPrompt, applyCors, handlePreflight } from '@persona-hub/core';
+import {
+  loadPersona,
+  buildSystemPrompt,
+  applyCors,
+  handlePreflight,
+  isAllowedOrigin,
+  rateLimit,
+} from '@persona-hub/core';
 
 const CRISIS_PATTERNS = [
   /自杀|不想活|想死|自残|伤害自己|结束生命|轻生|活着没意思|没有活下去/i,
@@ -9,12 +16,27 @@ const CRISIS_MESSAGE =
   '请现在联系专业帮助：全国统一心理援助热线 12356（24小时）；北京心理危机研究与干预中心 010-82951332。' +
   '你不需要一个人扛着。等你感觉平稳一些，我随时在这里。';
 
+const MAX_BODY_BYTES = 64 * 1024;
+const MAX_MESSAGES = 100;
+const MAX_MESSAGE_CHARS = 16000;
+
 async function readBody(req) {
   return new Promise((resolve, reject) => {
+    const declared = Number(req.headers['content-length'] || 0);
+    if (declared > MAX_BODY_BYTES) {
+      return reject({ status: 413, message: '请求体过大' });
+    }
     let data = '';
-    req.on('data', (chunk) => { data += chunk; });
+    req.on('data', (chunk) => {
+      data += chunk;
+      if (Buffer.byteLength(data, 'utf8') > MAX_BODY_BYTES) {
+        reject({ status: 413, message: '请求体过大' });
+      }
+    });
     req.on('end', () => {
-      try { resolve(data ? JSON.parse(data) : {}); } catch { reject(new Error('bad json')); }
+      try { resolve(data ? JSON.parse(data) : {}); } catch {
+        reject({ status: 400, message: '请求体必须是合法 JSON' });
+      }
     });
     req.on('error', reject);
   });
@@ -33,16 +55,41 @@ export default async function handler(req, res) {
     return sendJson(res, 405, { error: 'method_not_allowed', message: '仅支持 POST' });
   }
 
+  if (!isAllowedOrigin(req)) {
+    return sendJson(res, 403, { error: 'forbidden', message: '来源不被允许' });
+  }
+
+  const limit = rateLimit(req);
+  if (!limit.allowed) {
+    res.setHeader('Retry-After', String(limit.retryAfter));
+    return sendJson(res, 429, {
+      error: 'rate_limited',
+      message: `请求过于频繁，请 ${limit.retryAfter} 秒后再试`,
+    });
+  }
+
   let body;
   try {
     body = req.body ?? (await readBody(req));
-  } catch {
-    return sendJson(res, 400, { error: 'bad_request', message: '请求体必须是合法 JSON' });
+  } catch (err) {
+    const status = err && err.status ? err.status : 400;
+    return sendJson(res, status, {
+      error: 'bad_request',
+      message: (err && err.message) || '请求体必须是合法 JSON',
+    });
   }
 
   const { personaId, messages, disclaimerShown } = body || {};
   if (!personaId || !Array.isArray(messages) || messages.length === 0) {
     return sendJson(res, 400, { error: 'bad_request', message: '缺少 personaId 或 messages' });
+  }
+  if (messages.length > MAX_MESSAGES) {
+    return sendJson(res, 400, { error: 'bad_request', message: '消息数量过多' });
+  }
+  for (const m of messages) {
+    if (typeof m?.content !== 'string' || m.content.length > MAX_MESSAGE_CHARS) {
+      return sendJson(res, 400, { error: 'bad_request', message: '消息内容不合法或过长' });
+    }
   }
 
   const persona = loadPersona(personaId);
