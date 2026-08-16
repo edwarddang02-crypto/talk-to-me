@@ -1,5 +1,16 @@
 {
   "personas": [
-    { "id": "nietzsche", "enabled": true }
+    {
+      "id": "nietzsche",
+      "enabled": true
+    },
+    {
+      "id": "pessoa",
+      "enabled": true
+    },
+    {
+      "id": "adler",
+      "enabled": true
+    }
   ]
 }

@@ -5,8 +5,9 @@ function el(tag, className, text) {
   return node;
 }
 
-function avatarChar(name) {
-  return name ? name.trim().charAt(0) : '?';
+function avatarChar(name, nameEn) {
+  const source = (nameEn || name || '').trim();
+  return source ? source.charAt(0).toUpperCase() : '?';
 }
 
 const CN_DIGITS = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
@@ -76,7 +77,7 @@ async function initIndex() {
         img.alt = p.name || p.nameEn || '';
         plate.appendChild(img);
       } else {
-        plate.appendChild(el('span', 'plate-glyph', avatarChar(p.name)));
+        plate.appendChild(el('span', 'plate-glyph', avatarChar(p.name, p.nameEn)));
         if (p.nameEn) plate.appendChild(el('span', 'plate-caption', p.nameEn.toUpperCase()));
       }
       figure.appendChild(plate);
@@ -323,8 +324,22 @@ function initChat() {
     }
   });
 
-  document.getElementById('exit-role').addEventListener('click', () => {
-    send('请退出角色，恢复正常回答。');
+  const clearBtn = document.getElementById('clear-chat');
+  const clearDialog = document.getElementById('clear-dialog');
+  const clearCancel = document.getElementById('clear-cancel');
+  const clearConfirm = document.getElementById('clear-confirm');
+
+  clearBtn.addEventListener('click', () => clearDialog.showModal());
+  clearCancel.addEventListener('click', () => clearDialog.close());
+  clearConfirm.addEventListener('click', () => {
+    history = [];
+    localStorage.removeItem(storageKey);
+    messagesEl.innerHTML = '';
+    addMessage('assistant', profile.welcome || '问吧。');
+    clearDialog.close();
+  });
+  clearDialog.addEventListener('click', (e) => {
+    if (e.target === clearDialog) clearDialog.close();
   });
 
   (async () => {
@@ -333,10 +348,10 @@ function initChat() {
       profile = personas.find((p) => p.id === personaId);
       if (!profile) throw new Error('人物不存在');
       nameEl.textContent = profile.name;
-      avatarEl.textContent = avatarChar(profile.name);
+      avatarEl.textContent = avatarChar(profile.name, profile.nameEn);
       const metaBits = [profile.period, profile.role, profile.roleEn].filter(Boolean).join(' · ');
       metaEl.textContent = metaBits || profile.tagline || '';
-      document.title = `对话 ${profile.name} · 人物对话`;
+      document.title = `对话 ${profile.name} · 隔世谈`;
       renderEpigraph();
       renderHistory();
       showDisclaimer();

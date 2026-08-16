@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>对话 · 人物对话</title>
+  <title>对话 · 隔世谈</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -16,7 +16,7 @@
 <body class="chat-body">
   <header class="chat-header">
     <div class="chat-masthead">
-      <span>人物对话 · Colloquy</span>
+      <span>隔世谈 · Colloquy</span>
       <span>对话档案 · Correspondence</span>
     </div>
     <div class="letterhead">
@@ -28,7 +28,7 @@
           <p class="chat-meta" id="chat-meta">…</p>
         </div>
       </div>
-      <button id="exit-role" class="text-btn" title="让 TA 退出角色">退出角色</button>
+      <button id="clear-chat" class="text-btn" title="清空本次对话记录">清空聊天历史</button>
     </div>
   </header>
 
@@ -51,6 +51,15 @@
   </form>
 
   <div id="error-toast" class="error-toast" hidden></div>
+
+  <dialog id="clear-dialog" class="confirm-dialog">
+    <p class="confirm-title">清空聊天历史？</p>
+    <p class="confirm-text">本次对话将永久删除，无法恢复。</p>
+    <div class="confirm-actions">
+      <button type="button" id="clear-cancel" class="text-btn">取消</button>
+      <button type="button" id="clear-confirm" class="text-btn btn-danger">确认清空</button>
+    </div>
+  </dialog>
 
   <script type="module" src="app.js"></script>
 </body>

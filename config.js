@@ -3,5 +3,7 @@
 //   - 留空 ""：使用同源相对路径（本地开发、或整个站点部署在 Vercel 时自动生效）
 //   - 填写 "https://xxx.vercel.app"：前端与 API 分离部署时（如 GitHub Pages + Vercel）
 window.APP_CONFIG = {
-  apiBase: "https://talk-to-me-omega.vercel.app",
+  apiBase: ["localhost", "127.0.0.1"].includes(location.hostname)
+    ? ""
+    : "https://talk-to-me-omega.vercel.app",
 };
