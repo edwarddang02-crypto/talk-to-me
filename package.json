@@ -1,0 +1,15 @@
+{
+  "name": "persona-hub",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "通用人物对话站：静态前端 + Serverless API + 可插拔人物包",
+  "scripts": {
+    "dev": "node server.mjs",
+    "import": "node scripts/import-persona.mjs",
+    "test": "node scripts/smoke-test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

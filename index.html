@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>人物对话 · 与历史人物交谈的档案</title>
+  <meta name="description" content="与历史上那些思维独特的人，隔空谈谈你的问题。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <div class="masthead-meta">
+        <span>与历史人物交谈的档案 · An Archive of Voices</span>
+        <span>第壹卷 · Vol. I — MMXXVI</span>
+      </div>
+      <h1 class="masthead-title">人物对话</h1>
+      <p class="masthead-epigraph">每一页，都是一位思想的来客。</p>
+      <div class="masthead-rules" aria-hidden="true">
+        <span></span>
+        <span></span>
+      </div>
+    </header>
+
+    <section class="editorial">
+      <p class="editorial-label">卷首语 · Editorial</p>
+      <p class="editorial-text">
+        与历史上那些思维独特的人，隔空谈谈你的问题。这里不是一座蜡像馆，而是一座回廊——
+        每一个门牌背后，都住着一种仍然会说话的思维方式。请选一位，落座，写信。
+      </p>
+    </section>
+
+    <main>
+      <div class="index-heading">
+        <h2>人物索引</h2>
+        <span class="index-sub">Index of Interlocutors</span>
+        <span class="index-count" id="index-count"></span>
+      </div>
+      <section id="persona-list" class="archive">
+        <div class="loading">正在翻开档案……</div>
+      </section>
+    </main>
+
+    <footer class="colophon">
+      <p>所有对话均由 AI 基于公开著作模拟生成，非本人观点；不构成医疗或心理治疗建议。</p>
+      <p>
+        人物档案由
+        <a href="https://github.com/alchaincyf/nuwa-skill" target="_blank" rel="noopener">女娲 · Skill造人术</a>
+        蒸馏生成
+      </p>
+    </footer>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

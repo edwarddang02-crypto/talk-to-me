@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>对话 · 人物对话</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="chat-body">
+  <header class="chat-header">
+    <div class="chat-masthead">
+      <span>人物对话 · Colloquy</span>
+      <span>对话档案 · Correspondence</span>
+    </div>
+    <div class="letterhead">
+      <a class="back-link" href="/">← 返回目录</a>
+      <div class="chat-identity">
+        <span id="chat-avatar" class="plate-mini"></span>
+        <div class="identity-text">
+          <h1 id="chat-name">…</h1>
+          <p class="chat-meta" id="chat-meta">…</p>
+        </div>
+      </div>
+      <button id="exit-role" class="text-btn" title="让 TA 退出角色">退出角色</button>
+    </div>
+  </header>
+
+  <main id="messages" class="messages">
+    <div class="messages-inner">
+      <div class="epigraph" id="chat-epigraph" hidden>
+        <p class="epigraph-label">卷首引语 · Epigraph</p>
+        <blockquote id="epigraph-text"></blockquote>
+        <p class="epigraph-source" id="epigraph-source"></p>
+      </div>
+      <div id="conversation" class="conversation"></div>
+    </div>
+  </main>
+
+  <form id="chat-form" class="input-bar" autocomplete="off">
+    <div class="letter-desk">
+      <textarea id="chat-input" rows="1" placeholder="写下你的问题……" title="Enter 寄出 · Shift+Enter 换行"></textarea>
+      <button id="send-btn" type="submit">寄出 →</button>
+    </div>
+  </form>
+
+  <div id="error-toast" class="error-toast" hidden></div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
