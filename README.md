@@ -35,11 +35,14 @@ Windows 且系统 PATH 中没有 Node 时，可直接双击或运行 `dev.cmd`�
 ```
 persona-hub/
 ├── index.html / chat.html / app.js / styles.css   # 前端
+├── config.js            # 前端全局配置（apiBase：API 地址）
 ├── api/
 │   ├── personas.js    # GET /api/personas   人物注册表
 │   └── chat.js        # POST /api/chat      对话（SSE 流式）
-├── shared/
-│   └── prompt-builder.mjs  # 人物包 → 系统提示词
+├── packages/persona-core/  # ★ Vercel 函数共享包（@persona-hub/core）
+│   ├── index.mjs          # 人物包 → 系统提示词 / 注册表
+│   ├── cors.mjs           # 跨域头
+│   └── data.mjs           # 自动生成的人物数据模块（勿手改）
 ├── personas/           # ★ 人物包（数据）
 │   ├── index.json      # 注册表
 │   └── <id>/
@@ -48,6 +51,7 @@ persona-hub/
 │       └── quotes.json    # 已核验引语库（约束引用真实性）
 ├── scripts/
 │   ├── import-persona.mjs  # 一键导入女娲 skill
+│   ├── build-persona-data.mjs  # personas/ → packages/persona-core/data.mjs
 │   └── smoke-test.mjs      # 回归测试（无需 API Key）
 └── server.mjs              # 本地开发服务器
 ```
@@ -65,8 +69,11 @@ node scripts/import-persona.mjs --id jung
 1. 复制 `SKILL.md` → `personas/jung/skill.md`
 2. 从 `references/research/03-expression-dna.md` 提取已核验引语 → `personas/jung/quotes.json`
 3. 生成占位 `profile.json` 并在 `personas/index.json` 注册
+4. 重新生成 `packages/persona-core/data.mjs`（Vercel 部署需要，随仓库提交）
 
 然后只需手动补 `profile.json` 里的四项：`tagline`、`description`、`theme`（主题色）、`welcome`。刷新页面即可出现新人物。
+
+手动修改 `personas/` 下的人物数据后，记得运行 `node scripts/build-persona-data.mjs` 重新生成数据模块并提交。
 
 若引语表未自动提取成功（文件格式不同），手动整理 `quotes.json`：
 `[{ "text": "原话", "source": "出处" }]`

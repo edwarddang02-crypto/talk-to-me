@@ -10,6 +10,7 @@
  *   2. 从 references/research/03-expression-dna.md 的「可核实关键引语」表提取 quotes.json
  *   3. 若 profile.json 不存在，生成默认占位（名字取自标题，主题色由 id 哈希生成）
  *   4. 在 personas/index.json 注册（已存在则跳过）
+ *   5. 重新生成 packages/persona-core/data.mjs（Vercel 部署用）
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync, copyFileSync } from 'node:fs';
 import path from 'node:path';
@@ -59,7 +60,7 @@ function nameFromTitle(skill) {
   return m ? m[1].trim() : null;
 }
 
-function main() {
+async function main() {
   const { id, source } = parseArgs(process.argv);
   if (!id) {
     console.error('用法：node scripts/import-persona.mjs --id <persona-id>');
@@ -126,6 +127,9 @@ function main() {
   } else {
     console.log('· 已在注册表中，跳过');
   }
+
+  console.log('· 重新生成 packages/persona-core/data.mjs');
+  await import('./build-persona-data.mjs');
 }
 
 main();

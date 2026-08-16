@@ -1,5 +1,4 @@
-import { loadPersona, buildSystemPrompt } from '../shared/prompt-builder.mjs';
-import { applyCors, handlePreflight } from '../shared/cors.mjs';
+import { loadPersona, buildSystemPrompt, applyCors, handlePreflight } from '@persona-hub/core';
 
 const CRISIS_PATTERNS = [
   /自杀|不想活|想死|自残|伤害自己|结束生命|轻生|活着没意思|没有活下去/i,

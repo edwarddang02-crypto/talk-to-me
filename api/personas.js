@@ -1,5 +1,4 @@
-import { listPersonas } from '../shared/prompt-builder.mjs';
-import { applyCors, handlePreflight } from '../shared/cors.mjs';
+import { listPersonas, applyCors, handlePreflight } from '@persona-hub/core';
 
 export default async function handler(req, res) {
   applyCors(res);

@@ -5,7 +5,7 @@
  * 检查：注册表、人物包完整性、提示词组装、token 量级估算。
  * 若设置了 DEEPSEEK_API_KEY，则追加一轮真实对话冒烟测试。
  */
-import { listPersonas, loadPersona, buildSystemPrompt } from '../shared/prompt-builder.mjs';
+import { listPersonas, loadPersona, buildSystemPrompt } from '@persona-hub/core';
 
 let failed = 0;
 function check(name, ok, detail = '') {

@@ -1,10 +1,5 @@
-import { readFileSync, existsSync } from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-export const PROJECT_ROOT = path.resolve(__dirname, '..');
-export const PERSONAS_DIR = path.join(PROJECT_ROOT, 'personas');
+import { PROFILES, QUOTES, SKILLS } from './data.mjs';
+export { applyCors, handlePreflight } from './cors.mjs';
 
 function baseProtocol(profile, opts) {
   const disclaimerRule = opts.disclaimerShown
@@ -23,30 +18,17 @@ function baseProtocol(profile, opts) {
 }
 
 export function loadPersona(id) {
-  const dir = path.join(PERSONAS_DIR, id);
-  const profilePath = path.join(dir, 'profile.json');
-  const skillPath = path.join(dir, 'skill.md');
-  if (!existsSync(profilePath) || !existsSync(skillPath)) return null;
-  const profile = JSON.parse(readFileSync(profilePath, 'utf8'));
-  const skill = readFileSync(skillPath, 'utf8');
-  let quotes = [];
-  const quotesPath = path.join(dir, 'quotes.json');
-  if (existsSync(quotesPath)) {
-    quotes = JSON.parse(readFileSync(quotesPath, 'utf8'));
-  }
-  return { id, profile, skill, quotes };
+  const entry = PROFILES.find((p) => p.id === id);
+  if (!entry || entry.enabled === false) return null;
+  const { enabled, ...profile } = entry;
+  return { id, profile, skill: SKILLS[id] || '', quotes: QUOTES[id] || [] };
 }
 
 export function listPersonas() {
-  const index = JSON.parse(readFileSync(path.join(PERSONAS_DIR, 'index.json'), 'utf8'));
-  const out = [];
-  for (const item of index.personas) {
-    if (item.enabled === false) continue;
-    const p = loadPersona(item.id);
-    if (!p) continue;
-    out.push({ ...p.profile, id: p.profile.id || item.id, quotes: p.quotes });
-  }
-  return out;
+  return PROFILES.filter((p) => p.enabled !== false).map(({ enabled, ...profile }) => ({
+    ...profile,
+    quotes: QUOTES[profile.id] || [],
+  }));
 }
 
 export function buildSystemPrompt(persona, opts = {}) {

@@ -1,0 +1,22 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      '@persona-hub/core':
+        specifier: file:./packages/persona-core
+        version: file:packages/persona-core
+
+packages:
+
+  '@persona-hub/core@file:packages/persona-core':
+    resolution: {directory: packages/persona-core, type: directory}
+
+snapshots:
+
+  '@persona-hub/core@file:packages/persona-core': {}
