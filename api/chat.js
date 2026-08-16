@@ -1,4 +1,5 @@
 import { loadPersona, buildSystemPrompt } from '../shared/prompt-builder.mjs';
+import { applyCors, handlePreflight } from '../shared/cors.mjs';
 
 const CRISIS_PATTERNS = [
   /自杀|不想活|想死|自残|伤害自己|结束生命|轻生|活着没意思|没有活下去/i,
@@ -27,6 +28,8 @@ function sendJson(res, status, payload) {
 }
 
 export default async function handler(req, res) {
+  applyCors(res);
+  if (handlePreflight(req, res)) return;
   if (req.method !== 'POST') {
     return sendJson(res, 405, { error: 'method_not_allowed', message: '仅支持 POST' });
   }
