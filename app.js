@@ -62,7 +62,7 @@ async function initIndex() {
 
     personas.forEach((p, i) => {
       const entry = el('a', 'archive-entry');
-      entry.href = `/chat.html?persona=${encodeURIComponent(p.id)}`;
+      entry.href = `chat.html?persona=${encodeURIComponent(p.id)}`;
       entry.setAttribute('aria-label', `与 ${p.name || p.nameEn || '这位人物'} 开始对话`);
 
       // 编号
@@ -135,7 +135,7 @@ function initChat() {
   const toast = document.getElementById('error-toast');
 
   if (!personaId) {
-    location.href = '/';
+    location.href = './';
     return;
   }
 
