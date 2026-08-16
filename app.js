@@ -34,6 +34,10 @@ function resolveApiBase() {
 
 const API_BASE = resolveApiBase();
 
+function apiUrl(path) {
+  return API_BASE ? `${API_BASE}/api/${path}` : `api/${path}`;
+}
+
 async function fetchJson(url, options) {
   const res = await fetch(url, options);
   const data = await res.json().catch(() => ({}));
@@ -46,7 +50,7 @@ async function initIndex() {
   const list = document.getElementById('persona-list');
   const countEl = document.getElementById('index-count');
   try {
-    const { personas } = await fetchJson(`${API_BASE}/api/personas`);
+    const { personas } = await fetchJson(apiUrl('personas'));
     list.innerHTML = '';
     if (!personas.length) {
       list.appendChild(el('div', 'loading', '暂无可用人物，请在 personas/ 中添加。'));
@@ -235,7 +239,7 @@ function initChat() {
     const { row: typingRow, para: typingPara } = addTyping();
     let acc = '';
     try {
-      const res = await fetch(`${API_BASE}/api/chat`, {
+      const res = await fetch(apiUrl('chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -325,7 +329,7 @@ function initChat() {
 
   (async () => {
     try {
-      const { personas } = await fetchJson(`${API_BASE}/api/personas`);
+      const { personas } = await fetchJson(apiUrl('personas'));
       profile = personas.find((p) => p.id === personaId);
       if (!profile) throw new Error('人物不存在');
       nameEl.textContent = profile.name;
