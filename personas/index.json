@@ -11,6 +11,10 @@
     {
       "id": "adler",
       "enabled": true
+    },
+    {
+      "id": "fengge",
+      "enabled": true
     }
   ]
 }
